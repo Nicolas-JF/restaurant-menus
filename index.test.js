@@ -2,7 +2,7 @@ const { sequelize } = require('./db');
 const Restaurant = require('./models/Restaurant');
 const Menu = require('./models/Menu');
 const MenuItem = require('./models/MenuItem');
-const { seedRestaurant, seedMenu, seedItem } = require('./seeds/seedData');
+const { seedRestaurant, seedMenu, seedItem } = require('./seedData');
 
 describe('Restaurant, Menu, and MenuItem CRUD operations', () => {
   beforeAll(async () => {
