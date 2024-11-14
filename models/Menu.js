@@ -1,5 +1,5 @@
 const { Sequelize, DataTypes, Model } = require('sequelize');
-const { sequelize } = require('../db/connection');
+const { sequelize } = require('../db');
 
 // Define the Menu model
 class Menu extends Model {}

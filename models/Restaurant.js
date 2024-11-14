@@ -1,5 +1,5 @@
 const { Sequelize, DataTypes, Model } = require('sequelize');
-const { sequelize } = require('../db/connection');
+const { sequelize } = require('../db');
 class Restaurant extends Model {}
 
 Restaurant.init(
