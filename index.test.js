@@ -1,43 +1,69 @@
-const {sequelize} = require('./db')
-const {Restaurant, Menu} = require('./models/index')
-const {
-    seedRestaurant,
-    seedMenu,
-  } = require('./seedData');
+const { sequelize } = require('./db/connection');
+const Restaurant = require('./models/Restaurant');
+const Menu = require('./models/Menu');
+const restaurantSeed = require('./seeds/restaurantSeed.json');
 
-describe('Restaurant and Menu Models', () => {
-    /**
-     * Runs the code prior to all tests
-     */
-    beforeAll(async () => {
-        // the 'sync' method will create tables based on the model class
-        // by setting 'force:true' the tables are recreated each time the 
-        // test suite is run
-        await sequelize.sync({ force: true });
+describe('Restaurant and Menu CRUD operations', () => {
+  beforeAll(async () => {
+    await sequelize.sync({ force: true });
+    await Restaurant.bulkCreate(restaurantSeed);
+  });
+
+  it('can create a new Restaurant', async () => {
+    const restaurant = await Restaurant.create({
+      name: "Four Leaf Clover",
+      location: "Berkley Heights",
+      cuisine: "Dessert",
     });
 
-    test('can create a Restaurant', async () => {
-        // TODO - write test
-        expect('NO TEST').toEqual('EXPECTED DATA')
+    expect(restaurant.name).toBe("Four Leaf Clover");
+    expect(restaurant.location).toBe("Berkley Heights");
+    expect(restaurant.cuisine).toBe("Dessert");
+  });
+
+  it('can create a new Menu', async () => {
+    const menu = await Menu.create({
+      title: "Dessert Menu",
     });
 
-    test('can create a Menu', async () => {
-        // TODO - write test
-        expect('NO TEST').toEqual('EXPECTED DATA')
-    });
+    expect(menu.title).toBe("Dessert Menu");
+  });
 
-    test('can find Restaurants', async () => {
-        // TODO - write test
-        expect('NO TEST').toEqual('EXPECTED DATA')
-    });
+  it('can update a Restaurant', async () => {
+    const restaurant = await Restaurant.findOne({ where: { name: "Four Leaf Clover" } });
+    restaurant.name = "The Clover";
+    await restaurant.save();
 
-    test('can find Menus', async () => {
-        // TODO - write test
-        expect('NO TEST').toEqual('EXPECTED DATA')
-    });
+    const updatedRestaurant = await Restaurant.findOne({ where: { id: restaurant.id } });
 
-    test('can delete Restaurants', async () => {
-        // TODO - write test
-        expect('NO TEST').toEqual('EXPECTED DATA')
-    });
-})
+    expect(updatedRestaurant.name).toBe("The Clover");
+  });
+
+  it('can update a Menu', async () => {
+    const menu = await Menu.findOne({ where: { title: "Dessert Menu" } });
+    menu.title = "Updated Dessert Menu";
+    await menu.save();
+
+    const updatedMenu = await Menu.findOne({ where: { id: menu.id } });
+
+    expect(updatedMenu.title).toBe("Updated Dessert Menu");
+  });
+
+  it('can delete a Restaurant', async () => {
+    const restaurant = await Restaurant.findOne({ where: { name: "Four Leaf Clover" } });
+    await restaurant.destroy();
+
+    const deletedRestaurant = await Restaurant.findOne({ where: { name: "Four Leaf Clover" } });
+
+    expect(deletedRestaurant).toBeNull();
+  });
+
+  it('can delete a Menu', async () => {
+    const menu = await Menu.findOne({ where: { title: "Dessert Menu" } });
+    await menu.destroy();
+
+    const deletedMenu = await Menu.findOne({ where: { title: "Dessert Menu" } });
+
+    expect(deletedMenu).toBeNull();
+  });
+});
