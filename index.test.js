@@ -1,4 +1,4 @@
-const { sequelize } = require('./db/connection');
+const { sequelize } = require('./db');
 const Restaurant = require('./models/Restaurant');
 const Menu = require('./models/Menu');
 const MenuItem = require('./models/MenuItem');
